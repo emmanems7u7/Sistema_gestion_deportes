@@ -14,6 +14,10 @@ use App\Http\Controllers\TwoFactorController;
 use App\Http\Controllers\CatalogoController;
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\ConfiguracionCredencialesController;
+use App\Http\Controllers\DocumentoCompetenciaController;
+use App\Http\Controllers\EventoController;
+use App\Http\Controllers\MapController;
+use App\Http\Controllers\CompetenciaController;
 
 
 Route::get('/', function () {
@@ -243,6 +247,48 @@ Route::middleware(['auth', 'can:Administración y Parametrización'])->group(fun
 });
 
 
+
+Route::middleware(['auth'])->group(function () {
+
+    Route::get('/competencias', [CompetenciaController::class, 'index'])->name('competencias.index')->middleware('can:competencias.ver');
+    Route::get('/competencias/create', [CompetenciaController::class, 'create'])->name('competencias.create')->middleware('can:competencias.crear');
+    Route::post('/competencias', [CompetenciaController::class, 'store'])->name('competencias.store')->middleware('can:competencias.guardar');
+    Route::get('/competencias/{id}', [CompetenciaController::class, 'show'])->name('competencias.show')->middleware('can:competencias.ver');
+    Route::get('/competencias/{id}/edit', [CompetenciaController::class, 'edit'])->name('competencias.edit')->middleware('can:competencias.editar');
+    Route::put('/competencias/{id}', [CompetenciaController::class, 'update'])->name('competencias.update')->middleware('can:competencias.actualizar');
+    Route::delete('/competencias/{id}', [CompetenciaController::class, 'destroy'])->name('competencias.destroy')->middleware('can:competencias.eliminar');
+
+
+    Route::get('/documentos', [DocumentoCompetenciaController::class, 'index'])->name('documento_competencia.index')->middleware('can:documento_competencia.ver');
+    Route::get('/documentos/crear/{competencia}', [DocumentoCompetenciaController::class, 'create'])->name('documento_competencia.create')->middleware('can:documento_competencia.crear');
+    Route::post('/documentos/{competencia}', [DocumentoCompetenciaController::class, 'store'])->name('documento_competencia.store')->middleware('can:documento_competencia.guardar');
+    Route::get('/documentos/{id}/editar', [DocumentoCompetenciaController::class, 'edit'])->name('documento_competencia.edit')->middleware('can:documento_competencia.editar');
+    Route::put('/documentos/{id}', [DocumentoCompetenciaController::class, 'update'])->name('documento_competencia.update')->middleware('can:documento_competencia.actualizar');
+    Route::delete('/documentos/{id}', [DocumentoCompetenciaController::class, 'destroy'])->name('documento_competencia.destroy')->middleware('can:documento_competencia.eliminar');
+    Route::get('documentos/{archivo}', [DocumentoCompetenciaController::class, 'mostrarArchivo'])->name('documentos.mostrar');
+
+
+
+    Route::get('eventos', [EventoController::class, 'index'])->name('eventos.index');
+    Route::get('eventos/create', [EventoController::class, 'create'])->name('eventos.create');
+    Route::post('eventos', [EventoController::class, 'store'])->name('eventos.store');
+    Route::get('eventos/{evento}', [EventoController::class, 'show'])->name('eventos.show');
+    Route::get('eventos/{evento}/edit', [EventoController::class, 'edit'])->name('eventos.edit');
+    Route::put('eventos/{evento}', [EventoController::class, 'update'])->name('eventos.update');
+    Route::delete('eventos/{evento}', [EventoController::class, 'destroy'])->name('eventos.destroy');
+
+
+    Route::get('/maps', [MapController::class, 'index'])->name('maps.index');
+    Route::get('/maps/create', [MapController::class, 'create'])->name('maps.create');
+    Route::post('/maps/{tipo}', [MapController::class, 'store'])->name('maps.store');
+    Route::get('/maps/{map}/edit', [MapController::class, 'edit'])->name('maps.edit');
+    Route::put('/maps/{map}', [MapController::class, 'update'])->name('maps.update');
+    Route::delete('/maps/{map}', [MapController::class, 'destroy'])->name('maps.destroy');
+    Route::get('/ubicaciones/{id}', [MapController::class, 'showJSON']);
+
+    Route::get('/ubicaciones/json', [MapController::class, 'getAllJson'])->name('ubicaciones.json');
+
+});
 
 
 

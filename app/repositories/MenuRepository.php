@@ -6,11 +6,13 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Menu;
 use Spatie\Permission\Models\Permission;
 use App\Models\Seccion;
+use App\Repositories\PermisoRepository;
 class MenuRepository extends BaseRepository implements MenuInterface
 {
-
-    public function __construct()
+    protected $permisoRepository;
+    public function __construct(PermisoRepository $permisoRepository)
     {
+        $this->permisoRepository = $permisoRepository;
         parent::__construct();
 
     }
@@ -26,15 +28,8 @@ class MenuRepository extends BaseRepository implements MenuInterface
             'accion_usuario' => Auth::user()->na
         ]);
 
-        Permission::firstOrCreate(
-            [
-                'name' => $menu->nombre,
-                'tipo' => 'menu'
-            ],
-            [
-                'id_relacion' => $menu->id
-            ]
-        );
+
+        $this->permisoRepository->store_permiso($menu->nombre, 'menu', 'web', ['id_relacion' => $menu->id]);
     }
     public function CrearSeccion($request)
     {
@@ -42,19 +37,14 @@ class MenuRepository extends BaseRepository implements MenuInterface
             [
                 'titulo' => $this->cleanHtml($request->input('titulo')),
                 'icono' => $this->cleanHtml($request->input('icono')),
+                'posicion' => $this->cleanHtml($request->input('posicion', 0)),
                 'accion_usuario' => Auth::user()->name,
             ]
         );
 
-        Permission::firstOrCreate(
-            [
-                'name' => $seccion->titulo,
-                'tipo' => 'seccion'
-            ],
-            [
-                'id_relacion' => $seccion->id
-            ]
-        );
+
+        $this->permisoRepository->store_permiso($seccion->titulo, 'seccion', 'web', ['id_relacion' => $seccion->id]);
+
     }
 
     public function ObtenerMenuPorSeccion($seccion_id)

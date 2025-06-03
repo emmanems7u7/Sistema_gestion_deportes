@@ -12,16 +12,33 @@ return new class extends Migration {
     {
         Schema::create('competencias', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre');
-            $table->text('descripcion')->nullable();
-            $table->date('fecha_inicio')->nullable();
-            $table->date('fecha_fin')->nullable();
-            $table->string('codigo_categoria', 50);
+            $table->string('nombre')
+                ->comment('Nombre de la competencia');
+
+            $table->text('descripcion')
+
+                ->comment('Descripción opcional de la competencia');
+
+            $table->date('fecha_inicio')
+
+                ->comment('Fecha de inicio de la comptencia');
+
+            $table->date('fecha_fin')
+
+                ->comment('Fecha de fin de la comptencia');
+
+            $table->string('codigo_categoria', 50)
+                ->comment('Código de la categoría relacionada a la competencia');
+
             $table->foreign('codigo_categoria')
                 ->references('catalogo_codigo')
                 ->on('catalogos')
                 ->onUpdate('cascade')
                 ->onDelete('restrict');
+
+            $table->string('accion_usuario', 20)
+
+                ->comment('Usuario que realizó la acción');
             $table->timestamps();
         });
     }

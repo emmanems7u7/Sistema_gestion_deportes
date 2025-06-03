@@ -10,7 +10,9 @@ use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Support\Str;
 use Illuminate\Support\Carbon;
 use Laravel\Sanctum\HasApiTokens;
-class User extends Authenticatable
+use Tymon\JWTAuth\Contracts\JWTSubject;
+
+class User extends Authenticatable implements JWTSubject
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, HasRoles, HasApiTokens;
@@ -76,5 +78,21 @@ class User extends Authenticatable
         $this->two_factor_code = null;
         $this->two_factor_expires_at = null;
         $this->save();
+    }
+
+    /**
+     * Obtiene el identificador que se almacenará en el token JWT.
+     */
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    /**
+     * Devuelve un array con claves personalizadas que serán añadidas al payload del JWT.
+     */
+    public function getJWTCustomClaims()
+    {
+        return [];
     }
 }
